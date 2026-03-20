@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 윤리와 트롤리 딜레마 - 인터랙티브 수업</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .gradient-text { background: linear-gradient(90deg, #4f46e5, #9333ea); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card { transition: transform 0.2s; }
+        .card:hover { transform: translateY(-4px); }
+        
+        /* 모달 스타일 */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.7); 
+            z-index: 1000; 
+            align-items: center; 
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal.active { display: flex; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- 인포그래픽 모달 -->
+    <div id="infographicModal" class="modal" onclick="closeModal()">
+        <div class="bg-white p-4 rounded-2xl max-w-3xl w-full mx-4 relative" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute -top-10 right-0 text-white flex items-center gap-1 hover:text-slate-300">
+                <span class="text-sm font-bold">닫기</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div class="overflow-hidden rounded-xl bg-slate-100 flex items-center justify-center min-h-[400px]">
+                <!-- 이미지 태그: 04.png -->
+                <img src="04.png" alt="AI 윤리 인포그래픽" class="max-w-full h-auto" onerror="this.parentElement.innerHTML='<div class=\'text-center p-10\'><p class=\'text-slate-400 font-bold\'>[인포그래픽 이미지: 04.png]</p><p class=\'text-xs text-slate-400 mt-2\'>이미지 파일이 경로에 존재해야 표시됩니다.</p></div>'">
+            </div>
+            <p class="mt-4 text-center text-sm text-slate-500 font-medium">AI 윤리 및 데이터 편향 프로세스 요약 인포그래픽</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-6">
+                <!-- 홈 버튼 추가 -->
+                <a href="../index.html" class="flex items-center gap-1 text-slate-500 hover:text-indigo-600 transition font-bold text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    홈
+                </a>
+                <h1 class="text-xl font-bold gradient-text border-l pl-6 border-slate-200">인간과 AI: 편향의 거울</h1>
+            </div>
+            <nav class="hidden md:flex space-x-4 text-sm font-medium">
+                <button onclick="showTab('intro')" class="hover:text-indigo-600 transition">개념</button>
+                <button onclick="showTab('dilemma')" class="hover:text-indigo-600 transition">딜레마 실험</button>
+                <button onclick="showTab('culture')" class="hover:text-indigo-600 transition">문화와 AI</button>
+                <button onclick="showTab('debate')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-full hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">토론</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-10">
+        
+        <!-- Tab 1: Intro/Bias Concept -->
+        <section id="intro" class="tab-content active space-y-8">
+            <div class="text-center space-y-4">
+                <h2 class="text-3xl font-extrabold tracking-tight">AI는 정말 '객관적'일까요?</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">AI는 인간이 제공한 데이터와 알고리즘이라는 토양 위에서 자랍니다. 즉, AI의 편향은 우리 사회의 숨겨진 편견이 투영된 결과입니다.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100 card">
+                    <h3 class="text-lg font-bold text-blue-700 mb-3">인간의 편향 (경험 기반)</h3>
+                    <ul class="text-sm space-y-2 text-slate-700">
+                        <li>• 개인적 경험, 문화, 교육을 통한 무의식적 학습</li>
+                        <li>• 고정관념은 쉽게 바뀌지 않음 (느린 변화)</li>
+                        <li>• 스스로 인식하기 매우 어려움</li>
+                    </ul>
+                </div>
+                <div class="bg-purple-50 p-6 rounded-2xl border border-purple-100 card">
+                    <h3 class="text-lg font-bold text-purple-700 mb-3">AI의 편향 (데이터 기반)</h3>
+                    <ul class="text-sm space-y-2 text-slate-700">
+                        <li>• 불균형한 데이터나 알고리즘 설계에서 기인</li>
+                        <li>• 수정되지 않는 한 동일한 패턴을 무한 반복</li>
+                        <li>• 통계적 측정이 가능하며 즉각적 수정 가능</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold">💡 핵심 용어 정리</h3>
+                    <button onclick="openModal()" class="flex items-center gap-2 bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl text-sm font-bold hover:bg-indigo-100 transition border border-indigo-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        인포그래픽 보기
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-indigo-100 text-indigo-600 px-2 py-1 rounded text-xs font-bold mt-1 shrink-0">데이터 편향</div>
+                        <p class="text-sm text-slate-600">인공지능이 배우는 '교과서' 자체가 특정 성별, 인종 등에 치우쳐 있는 경우</p>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="bg-indigo-100 text-indigo-600 px-2 py-1 rounded text-xs font-bold mt-1 shrink-0">알고리즘 편향</div>
+                        <p class="text-sm text-slate-600">개발자가 특정 데이터에 부여한 '가중치(Weight)'와 우선순위에 의해 발생하는 편향</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 2: Trolley Dilemma Simulation -->
+        <section id="dilemma" class="tab-content space-y-10">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold">당신은 어떤 선택을 하시겠습니까?</h2>
+                <p class="text-slate-600 mt-2 italic">결과적으로는 동일한 '1명 vs 5명'의 상황입니다.</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Case 1 -->
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-100">
+                    <span class="text-xs font-bold text-indigo-500 uppercase tracking-widest">Case 01</span>
+                    <h3 class="text-xl font-bold mt-1 mb-4">선로 전환기 (간접적 개입)</h3>
+                    <p class="text-slate-600 mb-6">통제 불능의 트롤리가 5명의 인부를 향해 가고 있습니다. 선로를 바꾸면 1명이 있는 선로로 이동합니다. 당신은 레버를 당기겠습니까?</p>
+                    <div class="flex gap-3">
+                        <button onclick="vote('case1', true)" class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700">당긴다</button>
+                        <button onclick="vote('case1', false)" class="flex-1 bg-slate-200 text-slate-700 py-3 rounded-xl font-bold hover:bg-slate-300">당기지 않는다</button>
+                    </div>
+                    <div id="result-case1" class="hidden mt-6 p-4 bg-indigo-50 rounded-xl text-center font-medium text-indigo-800">
+                        실제 연구 결과: 응답자의 <span class="text-xl font-bold">89%</span>가 찬성했습니다.
+                    </div>
+                </div>
+
+                <!-- Case 2 -->
+                <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-100">
+                    <span class="text-xs font-bold text-red-500 uppercase tracking-widest">Case 02</span>
+                    <h3 class="text-xl font-bold mt-1 mb-4">육교 위 사람 밀기 (직접적 개입)</h3>
+                    <p class="text-slate-600 mb-6">5명을 구하기 위해 옆에 서 있는 거구의 사람을 선로로 직접 밀어 트롤리를 멈추게 해야 합니다. 당신은 그를 밀겠습니까?</p>
+                    <div class="flex gap-3">
+                        <button onclick="vote('case2', true)" class="flex-1 bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700">민다</button>
+                        <button onclick="vote('case2', false)" class="flex-1 bg-slate-200 text-slate-700 py-3 rounded-xl font-bold hover:bg-slate-300">밀지 않는다</button>
+                    </div>
+                    <div id="result-case2" class="hidden mt-6 p-4 bg-red-50 rounded-xl text-center font-medium text-red-800">
+                        실제 연구 결과: 찬성률은 <span class="text-xl font-bold">11%</span>로 급감했습니다.
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 bg-slate-800 text-white rounded-2xl">
+                <h4 class="font-bold mb-2">🤔 왜 결과가 다를까요?</h4>
+                <p class="text-sm leading-relaxed opacity-90">인간은 단순히 숫자를 따지는 공리주의적 계산보다, <strong>'개입의 직접성'</strong>에 따른 도덕적 감정에 더 큰 영향을 받습니다. AI가 이러한 복잡한 '살해'와 '사고 개입'의 차이를 이해하도록 설계할 수 있을까요?</p>
+            </div>
+        </section>
+
+        <!-- Tab 3: Cultural Differences -->
+        <section id="culture" class="tab-content space-y-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold">모럴 머신: 국가마다 다른 AI 윤리</h2>
+                <p class="text-slate-600 mt-2">MIT 연구에 따르면, 누구를 먼저 구할 것인지에 대한 기준은 문화권마다 다르게 나타났습니다.</p>
+            </div>
+
+            <div class="bg-white rounded-3xl overflow-hidden shadow-sm border">
+                <div class="p-6 border-b">
+                    <h3 class="font-bold">전 세계 평균 보호 우선순위 Top 5</h3>
+                </div>
+                <div class="divide-y">
+                    <div class="px-6 py-4 flex justify-between items-center bg-green-50">
+                        <span class="font-bold text-green-700">1위</span>
+                        <span class="font-medium">유모차를 끄는 사람</span>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between items-center">
+                        <span class="font-bold text-slate-400">2위</span>
+                        <span>소녀</span>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between items-center">
+                        <span class="font-bold text-slate-400">3위</span>
+                        <span>소년</span>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between items-center">
+                        <span class="font-bold text-slate-400">4위</span>
+                        <span>임신한 여성</span>
+                    </div>
+                    <div class="px-6 py-4 flex justify-between items-center">
+                        <span class="font-bold text-slate-400">5위</span>
+                        <span>의사</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                    <h4 class="font-bold text-indigo-600 mb-2">서구권 (북미/유럽)</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">개인의 권리와 미래의 잠재력을 중시하여 <strong>어린이</strong>를 우선 보호하려는 경향이 매우 강함.</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                    <h4 class="font-bold text-orange-600 mb-2">동양권 (아시아)</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">전통적인 효 사상과 과거의 기여도를 존중하여 <strong>노인</strong>을 보호해야 한다는 응답이 타 지역보다 높음.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 4: Debate & Conclusion -->
+        <section id="debate" class="tab-content space-y-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold">최후의 토론: 누구를 지킬 것인가?</h2>
+                <p class="text-slate-600 mt-2">자율주행 자동차 제조사는 어떤 철학을 따라야 할까요?</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div class="bg-indigo-50 p-6 rounded-2xl">
+                        <h4 class="font-bold text-indigo-700 mb-2">A. 운전자 안전 우선론</h4>
+                        <p class="text-xs text-slate-500 mb-3">"구매자가 보호받지 못하는 차를 살까요?"</p>
+                        <ul class="text-sm space-y-2 text-slate-700">
+                            <li>• 소비자가 비용을 지불한 제품</li>
+                            <li>• 기술 확산을 위한 시장 논리</li>
+                            <li>• 예측 가능한 안전 보장</li>
+                        </ul>
+                    </div>
+                    <textarea placeholder="나의 의견 기록하기..." class="w-full h-24 p-4 text-sm rounded-xl border-2 border-slate-100 focus:border-indigo-400 outline-none"></textarea>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="bg-emerald-50 p-6 rounded-2xl">
+                        <h4 class="font-bold text-emerald-700 mb-2">B. 보행자(약자) 우선론</h4>
+                        <p class="text-xs text-slate-500 mb-3">"가장 약한 고리를 보호하는 것이 정의입니다."</p>
+                        <ul class="text-sm space-y-2 text-slate-700">
+                            <li>• 보행자는 신체적으로 더 취약함</li>
+                            <li>• 사회적 약자 보호의 공적 의무</li>
+                            <li>• 도로 전체의 안전망 설계</li>
+                        </ul>
+                    </div>
+                    <textarea placeholder="나의 의견 기록하기..." class="w-full h-24 p-4 text-sm rounded-xl border-2 border-slate-100 focus:border-emerald-400 outline-none"></textarea>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 text-white p-8 rounded-3xl text-center space-y-4">
+                <h3 class="text-xl font-bold">인공지능 리터러시를 가집시다</h3>
+                <p class="text-slate-400 text-sm max-w-lg mx-auto leading-relaxed">
+                    AI의 편향은 우리 사회의 일기장과 같습니다. 기술 뒤에 숨은 의도를 읽고 수정할 수 있는 주체는 결국 우리 인간입니다.
+                </p>
+                <button onclick="alert('오늘 학습한 내용을 바탕으로 AI 윤리 선언문을 작성해보세요!')" class="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-sm hover:bg-slate-200 transition">수업 마무리</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-100 py-10 border-t">
+        <div class="max-w-5xl mx-auto px-6 text-center text-slate-400 text-xs">
+            <p>© 2024 AI Ethics Educational Interactive Page. 기반 자료: 제공된 01, 02, 03.pdf 텍스트</p>
+        </div>
+    </footer>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function vote(caseId, value) {
+            const resultDiv = document.getElementById('result-' + caseId);
+            resultDiv.classList.remove('hidden');
+            resultDiv.classList.add('animate-bounce');
+            setTimeout(() => resultDiv.classList.remove('animate-bounce'), 1000);
+        }
+
+        function openModal() {
+            document.getElementById('infographicModal').classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModal() {
+            document.getElementById('infographicModal').classList.remove('active');
+            document.body.style.overflow = 'auto'; 
+        }
+
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
